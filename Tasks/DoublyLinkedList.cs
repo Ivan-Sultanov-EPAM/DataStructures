@@ -8,14 +8,13 @@ namespace Tasks
     public class DoublyLinkedList<T> : IDoublyLinkedList<T>
     {
         public Node<T> _head;
-        private int _length;
 
         public DoublyLinkedList()
         {
             _head = null;
         }
 
-        public int Length => _length;
+        public int Length => _head.GetLength();
 
         public void Add(T e)
         {
@@ -27,21 +26,22 @@ namespace Tasks
             {
                 _head.Add(e);
             }
-
-            _length++;
         }
 
         public void AddAt(int index, T e)
         {
-            throw new NotImplementedException();
+            if (index < 0)
+                throw new IndexOutOfRangeException();
+
+            _head.AddValueAt(index, e);
         }
 
         public T ElementAt(int index)
         {
-            if (index < 0 || index > _length - 1)
-                throw new NotImplementedException();
+            if (index < 0 || index > Length - 1)
+                throw new IndexOutOfRangeException();
 
-            return _head.GetAt(index);
+            return _head.GetValueAt(index);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -56,7 +56,21 @@ namespace Tasks
 
         public T RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            var result = ElementAt(index);
+
+            if (index < 0 || index > Length - 1)
+                throw new IndexOutOfRangeException();
+
+            if (index == 0 && _head.next == null)
+            {
+                _head = null;
+            }
+            else
+            {
+                _head.RemoveNodeAt(index);
+            }
+
+            return result;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -69,20 +83,27 @@ namespace Tasks
     {
         private T _data;
         public Node<T> next;
-        //public Node<T> previous;
-        private int _index;
 
-        public Node(T data, int index = 0)
+        public Node(T data)
         {
             _data = data;
-            _index = index;
+        }
+
+        public int GetLength(int length = 1)
+        {
+            if (next != null)
+            {
+                length = next.GetLength(length + 1);
+            }
+
+            return length;
         }
 
         public void Add(T value)
         {
             if (next == null)
             {
-                next = new Node<T>(value, _index++);
+                next = new Node<T>(value);
             }
             else
             {
@@ -90,14 +111,51 @@ namespace Tasks
             }
         }
 
-        public T GetAt(int index)
+        public T GetValueAt(int index, int position = 0)
         {
-            if (index == _index)
+            return index == position ? _data : next.GetValueAt(index, position + 1);
+        }
+
+        public void AddValueAt(int index, T value, int position = 0)
+        {
+            if (index == position)
             {
-                return _data;
+                var newNext = new Node<T>(_data)
+                {
+                    next = next
+                };
+
+                _data = value;
+                next = newNext;
+
+                return;
             }
 
-            return next.GetAt(index);
+            if (next == null)
+            {
+                next = new Node<T>(value);
+                return;
+            }
+
+            next.AddValueAt(index, value, position + 1);
+        }
+
+        public void RemoveNodeAt(int index, int position = 0)
+        {
+            if (index == position && next != null)
+            {
+                _data = next._data;
+                next = next.next;
+                return;
+            }
+
+            if (index == position + 1 && next is { next: null })
+            {
+                next = null;
+                return;
+            }
+
+            next?.RemoveNodeAt(index, position + 1);
         }
     }
 }
