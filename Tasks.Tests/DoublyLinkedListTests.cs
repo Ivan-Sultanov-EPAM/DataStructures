@@ -128,7 +128,7 @@ namespace Tasks.Tests
         }
 
         [Fact]
-        public void Should_Remove_First_Occurance_In_The_List()
+        public void Should_Remove_First_Occurence_In_The_List()
         {
             var list = new DoublyLinkedList<int>();
             list.Add(1);

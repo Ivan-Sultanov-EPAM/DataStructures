@@ -1,5 +1,5 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
+using System;
 using Xunit;
 
 namespace Tasks.Tests
@@ -19,7 +19,7 @@ namespace Tasks.Tests
         }
 
         [Fact]
-        public void Should_Throw_InvalidOperationExceptiong_If_Processor_Queue_Is_Empty_And_Pop_Called()
+        public void Should_Throw_InvalidOperationException_If_Processor_Queue_Is_Empty_And_Pop_Called()
         {
             var processor = new HybridFlowProcessor<int>();
 
@@ -39,7 +39,7 @@ namespace Tasks.Tests
         }
 
         [Fact]
-        public void Should_Throw_InvalidOperationExceptiong_If_Processor_Queue_Is_Empty_And_Dequeue_Called()
+        public void Should_Throw_InvalidOperationException_If_Processor_Queue_Is_Empty_And_Dequeue_Called()
         {
             var processor = new HybridFlowProcessor<int>();
 
